@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Si-No-Nym? 🔗</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      --bg-color: #fffbea;
+      --text-color: #78350f;
+      --container-bg: #fff8db;
+      --border-color: #facc15;
+      --primary-color: #fbbf24;
+      --secondary-color: #d97706;
+      --dark-orange: #b45309; /* darker orange for END button */
+      --success-color: #10b981;
+      --error-color: #ef4444;
+      --info-color: #fb923c;
+      --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --radius: 12px;
+      --input-padding: 18px;
+    }
+
+    body {
+      font-family: var(--font-family);
+      text-align: center;
+      margin: 0;
+      padding: 40px 15px;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    main {
+      background-color: var(--container-bg);
+      padding: 30px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      width: 95%;
+      max-width: 520px;
+      margin: auto;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 15px;
+      margin-bottom: 25px;
+    }
+    h1 {
+      font-size: 32px;
+      font-weight: 800;
+      margin: 0;
+    }
+    .si {color: var(--success-color);} /* green */
+    .no {color: var(--error-color);} /* red */
+    .nym {color: var(--primary-color);} /* yellow */
+    .score {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--secondary-color);
+    }
+    section.word-display {
+      font-size: 44px;
+      font-weight: 900;
+      margin: 30px 0 20px;
+      padding: 25px 15px;
+      background-color: var(--primary-color);
+      color: white;
+      border-radius: var(--radius);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      letter-spacing: 2px;
+    }
+    .pos-tag {
+      font-size: 18px;
+      opacity: 0.8;
+      margin-left: 10px;
+      font-weight: 500;
+    }
+    input {
+      padding: var(--input-padding);
+      width: 100%;
+      font-size: 18px;
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius);
+      box-sizing: border-box;
+      background-color: var(--container-bg);
+      color: var(--text-color);
+      margin-bottom: 10px;
+    }
+    input:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.3);
+      outline: none;
+    }
+    .progress-bar {
+      height: 6px;
+      background: var(--border-color);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin: 10px 0;
+    }
+    .progress-bar-inner {
+      height: 100%;
+      background: var(--secondary-color);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    button {
+      flex: 1;
+      padding: 14px;
+      font-size: 16px;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-weight: 700;
+    }
+    #submitButton {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    #shuffleButton {
+      background-color: var(--secondary-color);
+      color: white;
+    }
+    #endButton {
+      background-color: var(--dark-orange);
+      color: white;
+    }
+    #restartButton {
+      background-color: var(--success-color);
+      color: white;
+      margin-top: 30px;
+      padding: 15px;
+      width: 100%;
+      font-size: 18px;
+    }
+    .message {
+      padding: 15px;
+      margin-top: 25px;
+      font-weight: 600;
+      border-radius: var(--radius);
+      color: white;
+      opacity: 0;
+      animation: fadeIn 0.4s forwards;
+    }
+    @keyframes fadeIn { to {opacity: 1;} }
+    .message.success {background-color: var(--success-color);}
+    .message.error {background-color: var(--error-color);}
+    .message.info {background-color: var(--info-color);}
+    .hint {
+      margin-top: 20px;
+      padding: 18px;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-color);
+      background-color: #fef9c3;
+      border-radius: var(--radius);
+      text-align: left;
+      border-left: 5px solid #fbbf24;
+    }
+    section.chain-display {
+      margin-top: 35px;
+      font-size: 16px;
+      color: var(--secondary-color);
+      text-align: left;
+      padding: 15px;
+      background-color: var(--bg-color);
+      border-radius: var(--radius);
+      line-height: 1.8;
+      border: 1px dashed var(--border-color);
+    }
+    section.chain-display strong {
+      color: var(--primary-color);
+      display: block;
+      margin-bottom: 5px;
+    }
+    #startOverlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 22px;
+      flex-direction: column;
+      z-index: 10;
+    }
+    #startOverlay button {
+      background-color: var(--success-color);
+      color: white;
+      padding: 15px 30px;
+      font-size: 20px;
+      margin-top: 20px;
+      cursor: pointer;
+      border-radius: var(--radius);
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="startOverlay">
+    <h2>Welcome to Si-No-Nym? 🔗</h2>
+    <p>Connect synonyms to form the longest chain you can. 3 wrong tries gives you a hint.</p>
+    <button onclick="startGame()">Start Game</button>
+  </div>
+  <main>
+    <header>
+      <h1><span class="si">Si</span><span class="si">-</span><span class="no">No</span><span class="no">-</span><span class="nym">Nym?</span> 🔗</h1>
+      <aside class="score-and-toggle">
+        <div class="score" id="score">Score: 0</div>
+      </aside>
+    </header>
+    <section class="word-display" id="currentWord">Loading Word...</section>
+    <form onsubmit="event.preventDefault(); submitSynonym();">
+      <input type="text" id="synonymInput" placeholder="Enter the next synonym" disabled autocomplete="off">
+      <div class="progress-bar"><div class="progress-bar-inner" id="progressInner"></div></div>
+      <div class="button-group">
+        <button type="submit" id="submitButton" disabled>SUBMIT</button>
+        <button type="button" onclick="shuffleWord()" id="shuffleButton" style="display:none;">SKIP</button>
+        <button type="button" onclick="endGame()" id="endButton" style="display:none;">END</button>
+      </div>
+    </form>
+    <section class="feedback">
+      <div class="message" id="message"></div>
+      <div class="hint" id="hintBox" style="display:none;">💡</div>
+    </section>
+    <section class="chain-display" id="guessedWords">
+      <strong>Full Chain:</strong> Start the chain!
+    </section>
+    <button type="button" onclick="startGame()" id="restartButton" style="display: none;">START NEW GAME</button>
+  </main>
+<script>
+let currentWord="",currentPOS="",score=0,usedWords=new Set(),chainWords=[],allSynonyms=[],guessCount=0,hintGiven=false;
+const synonymInput=document.getElementById("synonymInput");
+const messageElement=document.getElementById("message");
+function formatPOS(tags){if(!tags)return"";if(tags.includes("n"))return"noun";if(tags.includes("v"))return"verb";if(tags.includes("adj"))return"adj";if(tags.includes("adv"))return"adv";return"";}
+async function fetchRandomWord(){const alphabet="abcdefghijklmnopqrstuvwxyz";const randomLetter=alphabet[Math.floor(Math.random()*alphabet.length)];const url=`https://api.datamuse.com/words?sp=${randomLetter}*&max=100&md=p`;try{const response=await fetch(url);const data=await response.json();const singleWords=data.filter(entry=>!entry.word.includes(" "));if(singleWords.length>0){const randomIndex=Math.floor(Math.random()*singleWords.length);const entry=singleWords[randomIndex];return{word:entry.word,pos:formatPOS(entry.tags)}}}catch(e){return null}return null;}
+async function fetchSynonyms(word){const urls=[`https://api.datamuse.com/words?rel_syn=${word}&max=30&md=p`,`https://api.datamuse.com/words?ml=${word}&max=30&md=p`,`https://api.datamuse.com/words?rel_trg=${word}&max=30&md=p`];try{const results=await Promise.all(urls.map(u=>fetch(u).then(r=>r.json())));const process=list=>list.filter(entry=>!entry.word.includes(" ")).map(entry=>({word:entry.word.toLowerCase(),pos:formatPOS(entry.tags)}));const merged=results.flatMap(process);const unique=[...new Map(merged.map(item=>[item.word,item])).values()];return unique}catch(e){return[]}}
+function updateDisplay(){document.getElementById("currentWord").innerHTML=`${currentWord.toUpperCase()} <span class=\"pos-tag\">(${currentPOS})</span>`;document.getElementById("score").textContent=`Score: ${score}`;synonymInput.value="";messageElement.textContent="";messageElement.className="message";const displayWords=chainWords.length>0?chainWords.join(" 🔗 "):"Start the chain!";document.getElementById("guessedWords").innerHTML=`<strong>Full Chain:</strong> ${displayWords}`;synonymInput.focus();document.getElementById("progressInner").style.width=`${(guessCount/3)*100}%`}
+function isWordUsed(word){return usedWords.has(word.toLowerCase());}
+async function submitSynonym(){const userInput=synonymInput.value.trim().toLowerCase();if(!userInput){messageElement.textContent="Please enter a word.";messageElement.className="message info";return;}const synonymEntry=allSynonyms.find(s=>s.word===userInput);if(synonymEntry){if(!isWordUsed(userInput)){const points=hintGiven?5:10;score+=points;usedWords.add(userInput);chainWords.push(userInput);currentWord=userInput;currentPOS=synonymEntry.pos;allSynonyms=await fetchSynonyms(currentWord);if(allSynonyms.length===0){messageElement.textContent=`🎉 Max Chain Reached! Final Score: ${score}`;messageElement.className="message success";endGame(true);return;}updateDisplay();messageElement.textContent=`✅ Chain extended! +${points} points.`;messageElement.className="message success";guessCount=0;document.getElementById("hintBox").style.display="none";hintGiven=false;}else{messageElement.textContent=`🔄 \"${userInput.toUpperCase()}\" already in the chain.`;messageElement.className="message info";synonymInput.value="";synonymInput.focus();}}else{if(hintGiven){messageElement.textContent=`❌ Game Over! The chain ended at \"${currentWord.toUpperCase()}\".`;messageElement.className="message error";endGame();}else{guessCount++;synonymInput.value="";synonymInput.focus();const triesLeft=3-guessCount;messageElement.textContent=`❌ Incorrect. Tries left before hint: ${triesLeft}`;messageElement.className="message error";document.getElementById("progressInner").style.width=`${(guessCount/3)*100}%`;if(guessCount>=3){document.getElementById("hintBox").style.display="block";const availableSynonyms=allSynonyms.filter(s=>!isWordUsed(s.word));const hints=availableSynonyms.slice(0,3).map(s=>`${s.word} (${s.pos})`);document.getElementById("hintBox").innerHTML=`💡 Hint: Try words like: *${hints.join(", ")}*`;hintGiven=true;}}}}
+async function shuffleWord(){document.getElementById("currentWord").textContent="FETCHING NEW WORD...";document.getElementById("submitButton").disabled=true;document.getElementById("shuffleButton").disabled=true;document.getElementById("endButton").disabled=true;let newEntry=null;let synonyms=[];do{newEntry=await fetchRandomWord();if(newEntry){synonyms=await fetchSynonyms(newEntry.word);}}while(!newEntry||synonyms.length===0);currentWord=newEntry.word;currentPOS=newEntry.pos;allSynonyms=synonyms;usedWords.add(currentWord);chainWords.push(currentWord);updateDisplay();document.getElementById("hintBox").style.display="none";messageElement.textContent=`New starting word: ${currentWord.toUpperCase()}.`;messageElement.className="message info";guessCount=0;hintGiven=false;document.getElementById("submitButton").disabled=false;document.getElementById("shuffleButton").disabled=false;document.getElementById("endButton").disabled=false;}
+async function startGame(){const overlay=document.getElementById("startOverlay");if(overlay) overlay.style.display="none";score=0;chainWords=[];usedWords.clear();await shuffleWord();document.getElementById("endButton").style.display="inline-block";document.getElementById("shuffleButton").style.display="inline-block";document.getElementById("restartButton").style.display="none";document.getElementById("synonymInput").disabled=false;document.getElementById("submitButton").disabled=false;synonymInput.focus();}
+function endGame(graceful=false){if(!graceful){messageElement.textContent=`🛑 CHAIN BROKEN. Score ${score}.`;messageElement.className="message error";}document.getElementById("guessedWords").innerHTML=`<strong>Final Chain Length:</strong> ${chainWords.length}<br><strong>Full Chain:</strong> ${chainWords.join(" 🔗 ")}`;document.getElementById("endButton").style.display="none";document.getElementById("shuffleButton").style.display="none";document.getElementById("restartButton").style.display="block";document.getElementById("synonymInput").disabled=true;document.getElementById("submitButton").disabled=true;document.getElementById("hintBox").style.display="none";}
+</script>
+</body>
+</html>
