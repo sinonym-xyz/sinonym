@@ -1,0 +1,2 @@
+# sinonym
+Sinonym game
